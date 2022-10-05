@@ -11,7 +11,7 @@ server.get('/Home',(req,res)=>{
     res.end();
 });
 
-server.listen(process.env.port|| port,()=>{
+server.listen(process.env.port|| 8080,()=>{
     console.log("Server running");
 });
 
