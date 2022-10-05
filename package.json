@@ -1,0 +1,22 @@
+{
+  "name": "csat_2_cloud_computing",
+  "version": "1.0.0",
+  "description": "Gowtham Safal cloud computing assignment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gowthamsafal/CSAT_2_Cloud_Computing.git"
+  },
+  "author": "Gowtham Safal",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gowthamsafal/CSAT_2_Cloud_Computing/issues"
+  },
+  "homepage": "https://github.com/gowthamsafal/CSAT_2_Cloud_Computing#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
