@@ -1,51 +1,58 @@
-name: Docker Build and Publish to Docker Hub
+# This is a basic workflow to help you get started with Actions
 
+name: CI/CD CSAT Nodejs
+
+# Controls when the workflow will run
 on:
-  # run it on push to the default repository branch
+  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [docker]
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
 
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # define job to build and publish docker image
-  build-and-push-docker-image:
-    name: Build Docker image and push to repositories
-    # run only when code is compiling and tests are passing
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # steps to perform in job
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
 
-      # setup Docker buld action
-      - name: Set up Docker Buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
 
-      - name: Login to DockerHub
-        uses: docker/login-action@v2
+      # Install nodeJs
+      - name: Use Node.js
+        uses: actions/setup-node@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          node-version: "14.x"
 
-      - name: Login to Github Packages
-        uses: docker/login-action@v2
+      # Install project dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
+
+  # Deploy To Heroku
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [build]
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build image and push to Docker Hub and GitHub Container Registry
-        uses: docker/build-push-action@v2
-        with:
-          # relative path to the place where source code with Dockerfile is located
-          context: ./
-          # Note: tags has to be all lower-case
-          tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/nodejs-image-demo:latest 
-            ghcr.io/${{ secrets.DOCKERHUB_USERNAME }}/nodejs-image-demo:latest
-          # build on feature branches, push only on main branch
-          push: ${{ github.ref == 'refs/heads/docker' }}
-
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+          heroku_app_name: "c0833561-assignment1" #Must be unique in Heroku
+          heroku_email: "gowthamsafal@gmail.com"
